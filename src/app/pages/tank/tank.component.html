@@ -1,0 +1,136 @@
+<div fxLayout.gt-md="row" fxLayout.lt-lg="column">
+    <div class="card" fxFlex>
+        <h1>Tank Form Field</h1>
+        <form fxLayout="column" [formGroup]="tankForm" (ngSubmit)="createNew()" class="big-font" autocomplete="off">
+            <!-- TANK NAME -->
+            <mat-form-field fxFlex class="input-text" appearance="fill">
+                <mat-label>Storage Tank Name:</mat-label>
+                <input matInput formControlName="name" placeholder="Name" type="text">
+                <button *ngIf="tankForm.get('name')?.value" matSuffix mat-icon-button aria-label="Clear" (click)="tankForm.get('name')?.setValue('')">
+                    <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="tankForm.get('name')?.hasError('required')">The name has to be inserted</mat-error>
+            </mat-form-field>
+
+            <!-- DESCRIPTION -->
+            <mat-form-field fxFlex class="input-text" appearance="fill">
+                <mat-label>Description:</mat-label>
+                <textarea matInput formControlName="description" placeholder="Ex. This Tank is special because..." type="text"></textarea>
+                <button *ngIf="tankForm.get('description')?.value" matSuffix mat-icon-button aria-label="Clear" (click)="tankForm.get('description')?.setValue('')">
+                <mat-icon>close</mat-icon>
+            </button>
+            </mat-form-field>
+
+            <!-- HEIGHT -->
+            <mat-form-field fxFlex class="input-number" appearance="fill">
+                <mat-label>Height:</mat-label>
+                <input matInput formControlName="height" placeholder="Height" type="number">
+                <span matSuffix>mm</span>
+                <mat-error *ngIf="tankForm.get('height')?.hasError('required')">Die Id muss eingegeben werden</mat-error>
+            </mat-form-field>
+
+            <!-- DIAMETER -->
+            <mat-form-field fxFlex class="input-number" appearance="fill">
+                <mat-label>Diameter:</mat-label>
+                <mat-select formControlName="diameter" placeholder="Diameter">
+                    <mat-option value="">-- None --</mat-option>
+                    <mat-option *ngFor="let bott1 of bottoms" value="{{ bott1.bdiameter }}">{{ bott1.bdiameter }}mm, {{ bott1.bname }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="tankForm.get('diameter')?.hasError('required')">Die Id muss eingegeben werden</mat-error>
+            </mat-form-field>
+
+            <!-- VOLUME -->
+            <!-- normal -->
+            <ng-container *ngIf="tankForm.get('height')?.valueChanges || tankForm.get('diameter')?.valueChanges">
+                <ng-container *ngIf="tankForm.get('height')?.value == false || tankForm.get('height')?.value === null && tankForm.get('diameter')?.value == false ">
+                    <mat-form-field fxFlex class="input-number" appearance="fill">
+                        <mat-label>Volume:</mat-label>
+                        <input matInput formControlName="volume" placeholder="Volume" type="number">
+                        <span matSuffix>L</span>
+                        <mat-error *ngIf="tankForm.get('volume')?.hasError('required')">Die Id muss eingegeben werden</mat-error>
+                    </mat-form-field>
+                </ng-container>
+                <ng-container *ngIf="tankForm.get('height')?.value && tankForm.get('diameter')?.value == false ">
+                    <mat-form-field fxFlex class="input-number" appearance="fill">
+                        <mat-label>Volume:</mat-label>
+                        <mat-select formControlName="volume" placeholder="Volume">
+                            <mat-option value="">-- None --</mat-option>
+                            <mat-option *ngFor="let bott2 of bottoms" value="{{ getTankVolume(bott2.bdiameter, bott2.bheight, bott2.bvolume) }}">{{ getTankVolume(bott2.bdiameter, bott2.bheight, bott2.bvolume) }}L</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="tankForm.get('volume')?.hasError('required')">Die Id muss eingegeben werden</mat-error>
+                    </mat-form-field>
+                </ng-container>
+            </ng-container>
+            <!-- INSULATION -->
+            <mat-form-field fxFlex class="input-number" appearance="fill">
+                <span matPrefix>Insulation:</span>
+                <input matInput formControlName="insulation" [hidden]="true">
+                <mat-checkbox class="checkbox-insulation" formControlName="insulation"></mat-checkbox>
+            </mat-form-field>
+            <button fxFlex mat-raised-button [disabled]="!tankForm.valid" class="maraniGreenButton button-right" type="submit">Create</button>
+        </form>
+
+        <!-- FORM FIELD LOGIC -->
+        <app-tank-logic
+        [height]="tankForm.get('height')?.value"
+        [diameter]="tankForm.get('diameter')?.value"
+        [volume]="tankForm.get('volume')?.value"
+        [firstValue]="getFirstValue()"
+        [secondValue]="getSecondValue()"
+        [thirdValue]="getThirdValue()"
+        (newFirstValue)="setFirstValue($event)"
+        (newSecondEvent)="setSecondValue($event)"
+        (newThirdEvent)="setThirdValue($event)">
+        </app-tank-logic>
+    </div>
+    <div class="card" fxFlex>
+        <h1>Tank Info</h1>
+        <table>
+            <tr>
+                <td class="info-title">Tank:</td>
+            </tr>
+            <tr>
+                <td class="info-left">Storage Tank Name:</td>
+                <td class="info-right">{{displayTank.tname}}</td>
+            </tr>
+            <tr>
+                <td class="info-left">Height:</td>
+                <td class="info-right">{{displayTank.theight}}mm</td>
+            </tr>
+            <tr>
+                <td class="info-left">Diameter:</td>
+                <td class="info-right">{{displayTank.tdiameter}}mm</td>
+            </tr>
+            <tr>
+                <td class="info-left">Volume:</td>
+                <td class="info-right">{{displayTank.tvolume}}L</td>
+            </tr>
+            <tr>
+                <td class="info-left">Insulation</td>
+                <td class="info-right">{{displayTank.tinsulation}}</td>
+            </tr>
+            <tr>
+                <br>
+            </tr>
+            <tr>
+                <td class="info-title">Extra:</td>
+            </tr>
+            <tr>
+                <td class="info-left">Creation date:</td>
+                <td class="info-right">{{displayTank.tcreated}}</td>
+            </tr>
+            <tr>
+                <td class="info-left">Description:</td>
+                <td class="info-right">{{displayTank.tdescription}}</td>
+            </tr>
+        </table>
+        <br>
+        <h3>DEBUG INFO:</h3>
+        <p>FirstValue: {{getFirstValue()}}</p>
+        <p>SeondValue: {{getSecondValue()}}</p>
+        <p>FirstValue: {{getThirdValue()}}</p>
+    </div>
+</div>
+<div class="card">
+    <h1>???</h1>
+</div>

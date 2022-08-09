@@ -1,1 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.maraniGrayBkg {
+    background-color: #282c30;
+    color: white;
+}
+
+.maraniGreenBkg {
+    background-color: #31a84b;
+    color: #282c30;
+}
+
+.maraniGrayCol {
+    color: #282c30;
+}
+
+.maraniGreenCol {
+    color: #31a84b;
+}
+
+.maraniGreenButton {
+    font-size: 25px;
+    color: #282c30;
+    background-color: #31a84b;
+}

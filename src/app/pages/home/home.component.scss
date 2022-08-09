@@ -1,0 +1,69 @@
+.card {
+    margin: 10px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: solid 1px white;
+    border-radius: 15px;
+    box-shadow: 0 0 10px lightgray;
+}
+
+#team {
+    box-sizing: border-box;
+}
+
+.team-content {
+    align-items: center;
+    justify-content: center;
+}
+
+.team-card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    margin: 15px;
+    max-width: 350px;
+}
+
+.team-card .team-container {
+    overflow: hidden;
+    padding: 16px;
+    padding-top: 0;
+}
+
+.title_team {
+    color: grey;
+}
+
+.profile_img {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    width: 350px;
+}
+
+.button {
+    border: 0px solid #282c30;
+    border-radius: 6px;
+    outline: 0;
+    display: inline-block;
+    padding: 8px;
+    color: white;
+    background-color: #282c30;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+}
+
+h1 {
+    font-size: 50px;
+    text-align: center;
+    color: #282c30;
+    padding: 20px;
+}
+
+.p-left {
+    padding-right: 38%;
+}
+
+.p-right {
+    padding-left: 38%;
+}

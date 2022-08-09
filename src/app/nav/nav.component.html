@@ -1,0 +1,25 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer class="sidenav maraniGrayBkg" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+        <mat-toolbar class="mat-toolbar-menu">
+            Menu
+        </mat-toolbar>
+        <mat-nav-list>
+            <a mat-list-item routerLink="/home" routerLinkActive="active-item">Home</a>
+            <a mat-list-item routerLink="/tank/new" routerLinkActive="active-item">Tank</a>
+            <a mat-list-item routerLink="/connectors" routerLinkActive="active-item">Connectors</a>
+            <a mat-list-item routerLink="/configs" routerLinkActive="active-item">Configs</a>
+        </mat-nav-list>
+        <div class="mat-toolbar-footer">
+            <p>by <a style="color: #31a84b;" (click)="goToLink('https://www.maranig.it/')">marani g.</a></p>
+        </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar class="maraniGreenBkg">
+            <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+            <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+          </button>
+            <span class="maraniGreyCol" style="font-size: 30px;">Project Special Tank.</span>
+        </mat-toolbar>
+        <ng-content></ng-content>
+    </mat-sidenav-content>
+</mat-sidenav-container>
