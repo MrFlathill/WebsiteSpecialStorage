@@ -28,17 +28,17 @@ export class TankLogicComponent implements OnChanges {
         switch (propName) {
           case 'height': {
             await this.doSomething("height", change.previousValue, change.currentValue);
-            console.log(change.currentValue);
+            //console.log(change.currentValue);
             break;
           }
           case 'diameter': {
             await this.doSomething("diameter", change.previousValue, change.currentValue);
-            console.log(change.currentValue);
+            //console.log(change.currentValue);
             break;
           }
           case 'volume': {
             await this.doSomething("volume", change.previousValue, change.currentValue);
-            console.log(change.currentValue);
+            //console.log(change.currentValue);
             break;
           }
         }
@@ -54,24 +54,24 @@ export class TankLogicComponent implements OnChanges {
       // FIRST is set
         if (this.firstValue != prop) {
           this.setSecondValue(prop)
-          console.log("Second Value: " + prop);
+          //console.log("Second Value: " + prop);
 
         }
       } else if (this.firstValue && this.secondValue && !this.thirdValue) {
       // FIRST and SECOND are set
         if (this.firstValue != prop && this.secondValue != prop) {
           this.setThirdValue(prop)
-          console.log("Third Value: " + prop);
+          //console.log("Third Value: " + prop);
         }
       } else if (this.firstValue && this.secondValue && this.thirdValue) {
       // FIRST, SECOND and THIRD are set
       } else if (!this.firstValue && !this.secondValue && !this.thirdValue) {
       // NOTHING is set
         this.setFirstValue(prop);
-        console.log("First Value: " + prop);
+        //console.log("First Value: " + prop);
       } else {
       // ERROR
-        console.log("fucking big error");
+        //console.log("fucking big error");
       }
     } else {
     // CHANGE = NO VALUE

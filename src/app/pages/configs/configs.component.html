@@ -1,1 +1,27 @@
-<p>configs works!</p>
+<table >
+  <tr>
+    <th *ngFor="let str of displayedColumns">{{str}}</th>
+  </tr>
+  <tr *ngFor="let bottom of bottoms">
+    <td class="alignMiddle">{{bottom.bname}}</td>
+    <td class="alignMiddle">{{bottom.bdiameter}}mm</td>
+    <td class="alignMiddle">{{bottom.bheight}}mm</td>
+    <td class="alignMiddle">{{bottom.bvolume}}L</td>
+    <td class="alignMiddle">{{bottom.bminheight}}mm</td>
+    <td class="alignMiddle">{{bottom.bmaxheight}}mm</td>
+    <td class="alignMiddle">{{bottom.bdescription}}</td>
+    <td class="alignMiddle">{{bottom.bprice}}€</td>
+    <td>
+      <button class="maraniGreenButton leftButton" mat-raised-button  >
+          <mat-icon class="mat-18">delete_outline</mat-icon>
+      </button>
+      <button class="maraniGreenButton leftButton" mat-raised-button  >
+        <mat-icon class="mat-18">mode_edit</mat-icon>
+    </button>
+    </td>
+  </tr>
+</table>
+
+<button class="maraniGreenButton addButton" mat-raised-button (click)="addBottom()">
+    <mat-icon class="add-icon">add</mat-icon>
+</button>

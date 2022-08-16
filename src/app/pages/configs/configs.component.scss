@@ -1,0 +1,33 @@
+table {
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.addButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 8px 12px 8px;
+  border-radius: 50px;
+}
+
+.leftButton {
+  align-self: flex-start;
+  margin-left: 5px;
+}
+
+.alignMiddle {
+  text-align: center;
+}
+
+.add-icon {
+  font-size: 35px;
+  text-align: center;
+  align-self: center;
+  height: 36px;
+  width: 36px;
+}

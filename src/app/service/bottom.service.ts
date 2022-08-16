@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { Bottom } from '../shared/bottom';
+import { Bottom } from '../shared/objects/bottom';
 
 const URL = 'http://localhost:8090/api/v1';
 const header = {

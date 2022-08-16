@@ -3,11 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { FormArray, FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators} from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
-import { Tank } from '../../shared/tank';
-import { Bottom } from '../../shared/bottom';
-import { TankFactory } from '../../shared/Tank-factory';
+import { Tank } from '../../shared/objects/tank';
+import { Bottom } from '../../shared/objects/bottom';
+import { TankFactory } from '../../shared/objects/Tank-factory';
 import { BottomService } from '../../service/bottom.service';
 
 @Component({
@@ -31,6 +31,8 @@ export class TankComponent implements OnInit {
   firstValue: string = "";
   secondValue: string = "";
   thirdValue: string = "";
+
+  diameterCache: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
   constructor(
     private router: Router,
@@ -60,7 +62,14 @@ export class TankComponent implements OnInit {
             respArr => {this.bottoms = respArr},
             respErr => {this.error = respErr}
           )
-        console.log(this.bottoms);
+
+        // Subscribe to diameter Cache
+        this.getDiameterCache().subscribe((diameter) => {
+          if (diameter != 0 && this.firstValue === 'height' && this.secondValue == 'volume'||
+              diameter != 0 && this.firstValue === 'volume' && this.secondValue == 'height') {
+            this.tankForm.get('diameter')?.setValue(diameter);
+          }
+        });
       } else {
         console.log("no ID");
         this.tank = TankFactory.empty();
@@ -81,8 +90,17 @@ export class TankComponent implements OnInit {
           )
       }
 
+      // Subscribe to diameter Cache
+      this.getDiameterCache().subscribe((diameter) => {
+        if (diameter != 0 && this.firstValue === 'height' && this.secondValue == 'volume'||
+            diameter != 0 && this.firstValue === 'volume' && this.secondValue == 'height') {
+          this.tankForm.get('diameter')?.setValue(diameter);
+        }
+      });
     });
   }
+
+  // SETTERS
 
   setFirstValue(theValue: string) {
     this.firstValue = theValue;
@@ -96,6 +114,12 @@ export class TankComponent implements OnInit {
     this.thirdValue = theValue;
   }
 
+  setDiameterCache(theValue: number) {
+    this.diameterCache.next(theValue);
+  }
+
+  // GETTERS
+
   getFirstValue() {
     return this.firstValue;
   }
@@ -108,25 +132,66 @@ export class TankComponent implements OnInit {
     return this.thirdValue;
   }
 
+  getDiameterCache(): Observable<number> {
+    return this.diameterCache.asObservable();
+  }
+
+  /**
+   * Form Validation and CREATE Button
+   */
   createNew() {
     const tk = TankFactory.empty();
 
     Object.assign(this.displayTank , this.tankForm.value);
 
     this.tankForm.reset(TankFactory.empty());
+
+    this.thirdValue = "";
+    this.secondValue = "";
+    this.firstValue = "";
+
+    this.diameterCache.next(0);
+
+    // this.tankForm.get('volume')?.reset(0);
+    // this.tankForm.get('diameter')?.reset(0);
+    // this.tankForm.get('height')?.reset(0);
   }
 
-  assignTankObject(tank: Tank) {
+  /**
+   * Here we calculate the Volume of a Tank with following @params
+   * @param diameter
+   * @param totheight
+   * @returns The Volume of the Tank
+   */
+  getTankVolume(diameter: number, totheight: number): number {
+    var bottom = this.bottoms.find((obj) => {
+      return obj.bdiameter == diameter;
+    });
+
+    if (bottom) {
+      // cylinder volume (-100 cause of upper space and lower space)
+      var height = totheight - (2 * bottom.bheight) - 100
+      var ret = Math.pow(diameter/2,2) * this.pi * height;
+      // convert to Liter and round
+      ret = Math.round(ret/1e6)
+      // total volume with 2 bottoms and round
+      ret = ret + (2 * bottom?.bvolume);
+      ret = Math.round(ret);
+      return ret;
+    }
+    return 0;
   }
 
-  getTankVolume(diameter: number, height: number, bottomVolume: number): number {
-    // cylinder volume
-    var ret = Math.pow(diameter/2,2) * this.pi * height;
-    // total volume with 2 bottoms
-    ret = ret + (2 * bottomVolume);
-    // konverto to Liter and round
-    ret = Math.round(ret/1e6)
-    return ret;
+  /**
+   *  Here we set and calculate the Volume of a Tank with following @params
+   *  We write the calculated Volume in the Tank Formular
+   * @param diameter
+   * @param totheight
+   */
+  setTankVolume(diameter: number, totheight: number): void {
+    var ret = this.getTankVolume(diameter, totheight);
+    // write volume value to TankForm
+    this.tankForm.get('volume')?.setValue(ret);
   }
 
 }
