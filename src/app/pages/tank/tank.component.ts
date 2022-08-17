@@ -32,7 +32,9 @@ export class TankComponent implements OnInit {
   secondValue: string = "";
   thirdValue: string = "";
 
-  diameterCache: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  // Variables to manage Diameter input
+  diameterCache: number = 0;
+  diameterRead: boolean = true;
 
   constructor(
     private router: Router,
@@ -63,13 +65,6 @@ export class TankComponent implements OnInit {
             respErr => {this.error = respErr}
           )
 
-        // Subscribe to diameter Cache
-        this.getDiameterCache().subscribe((diameter) => {
-          if (diameter != 0 && this.firstValue === 'height' && this.secondValue == 'volume'||
-              diameter != 0 && this.firstValue === 'volume' && this.secondValue == 'height') {
-            this.tankForm.get('diameter')?.setValue(diameter);
-          }
-        });
       } else {
         console.log("no ID");
         this.tank = TankFactory.empty();
@@ -90,13 +85,6 @@ export class TankComponent implements OnInit {
           )
       }
 
-      // Subscribe to diameter Cache
-      this.getDiameterCache().subscribe((diameter) => {
-        if (diameter != 0 && this.firstValue === 'height' && this.secondValue == 'volume'||
-            diameter != 0 && this.firstValue === 'volume' && this.secondValue == 'height') {
-          this.tankForm.get('diameter')?.setValue(diameter);
-        }
-      });
     });
   }
 
@@ -115,7 +103,10 @@ export class TankComponent implements OnInit {
   }
 
   setDiameterCache(theValue: number) {
-    this.diameterCache.next(theValue);
+    if (this.diameterRead === true) {
+      this.diameterCache = theValue;
+      this.diameterRead = false
+    }
   }
 
   // GETTERS
@@ -132,8 +123,8 @@ export class TankComponent implements OnInit {
     return this.thirdValue;
   }
 
-  getDiameterCache(): Observable<number> {
-    return this.diameterCache.asObservable();
+  getDiameterCache(): number {
+    return this.diameterCache;
   }
 
   /**
@@ -150,11 +141,8 @@ export class TankComponent implements OnInit {
     this.secondValue = "";
     this.firstValue = "";
 
-    this.diameterCache.next(0);
+    this.diameterCache = 0;
 
-    // this.tankForm.get('volume')?.reset(0);
-    // this.tankForm.get('diameter')?.reset(0);
-    // this.tankForm.get('height')?.reset(0);
   }
 
   /**
@@ -183,8 +171,32 @@ export class TankComponent implements OnInit {
   }
 
   /**
+   * Here we calculate the total Height of a Tank with following @params
+   * @param diameter
+   * @param totvolume
+   * @returns The total Height of the Tank
+   */
+  getTankHeight(diameter: number, totvolume: number): number {
+    var bottom = this.bottoms.find((obj) => {
+      return obj.bdiameter == diameter;
+    });
+
+    if (bottom) {
+      // volume of the Tanks Cylinder
+      var volumeZyl = totvolume - (2*bottom.bvolume);
+      // height of the Tank Cylinder
+      var heightZyl = volumeZyl / (Math.pow(diameter/2, 2) * this.pi)
+      // convert to mm and round plus adding the two bottoms and 100 for total height
+      var ret = Math.round(heightZyl*1e6) + (2 * bottom.bheight) + 100;
+      return ret;
+    }
+    return 0;
+  }
+
+  /**
    *  Here we set and calculate the Volume of a Tank with following @params
    *  We write the calculated Volume in the Tank Formular
+   *  Same for setTankDiameter and setTankHeight
    * @param diameter
    * @param totheight
    */
@@ -192,6 +204,20 @@ export class TankComponent implements OnInit {
     var ret = this.getTankVolume(diameter, totheight);
     // write volume value to TankForm
     this.tankForm.get('volume')?.setValue(ret);
+  }
+
+  setTankDiameter(): void {
+    if (this.diameterRead === false) {
+      this.tankForm.get('diameter')?.setValue(this.getDiameterCache());
+      this.setDiameterCache(0);
+      this.diameterRead = true;
+    }
+  }
+
+  setTankHeight(diameter: number, volume: number): void {
+    var ret = this.getTankHeight(diameter, volume);
+    // write height value to TankForm
+    this.tankForm.get('height')?.setValue(ret);
   }
 
 }

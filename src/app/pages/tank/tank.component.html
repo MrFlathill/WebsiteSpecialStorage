@@ -23,17 +23,39 @@
             </mat-form-field>
 
           <!----- HEIGHT -->
-            <mat-form-field fxFlex class="input-number" appearance="fill">
+
+            <!-- NORMAL and when only Volume or Diameter is set -->
+            <ng-container *ngIf="!firstValue ||
+                                  firstValue === 'height' ||
+                                  firstValue === 'diameter' && !secondValue ||
+                                  firstValue === 'volume' && !secondValue ||
+                                  firstValue === 'diameter' && secondValue == 'height' ||
+                                  firstValue === 'volume' && secondValue == 'height'  ">
+              <mat-form-field fxFlex class="input-number" appearance="fill">
                 <mat-label>Height:</mat-label>
                 <input matInput formControlName="height" placeholder="Height" type="number">
                 <span matSuffix>mm</span>
                 <mat-error *ngIf="tankForm.get('height')?.hasError('required')">Die Id muss eingegeben werden</mat-error>
-            </mat-form-field>
+              </mat-form-field>
+            </ng-container>
+
+            <!-- If DIAMETER and VOLUME are set -->
+            <ng-container *ngIf="firstValue === 'diameter' && secondValue === 'volume' ||
+                                 firstValue === 'volume' && secondValue === 'diameter' ">
+              <mat-form-field fxFlex class="input-number" appearance="fill">
+                <mat-label>Height:</mat-label>
+                <input matInput readonly formControlName="height" placeholder="Height" type="number">
+                <span matSuffix>mm</span>
+                <mat-hint>Automatic Calculation due to given <strong>diameter</strong> and <strong>volume</strong>{{setTankHeight(tankForm.get('diameter')?.value, tankForm.get('volume')?.value)}}</mat-hint>
+                <mat-error *ngIf="tankForm.get('height')?.hasError('required')">Die Id muss eingegeben werden</mat-error>
+              </mat-form-field>
+            </ng-container>
 
           <!----- DIAMETER -->
 
-            <!-- NORMAL and When only HEIGHT is or VOLUME is set -->
+            <!-- NORMAL and when only HEIGHT is or VOLUME is set -->
             <ng-container *ngIf="!firstValue ||
+                                  firstValue === 'diameter' ||
                                   firstValue === 'height' && !secondValue ||
                                   firstValue === 'volume' && !secondValue ||
                                   firstValue === 'height' && secondValue == 'diameter' ||
@@ -48,16 +70,14 @@
                 </mat-form-field>
             </ng-container>
 
-            <!-- If HEIGHT and VOLUME is set -->
-            <ng-container *ngIf="firstValue === 'height' && secondValue === 'volume' && !thirdValue ||
-                                 firstValue === 'volume' && secondValue === 'height' && !thirdValue ||
-                                 firstValue === 'height' && secondValue === 'volume' && thirdValue === 'diameter' ||
-                                 firstValue === 'volume' && secondValue === 'height' && thirdValue === 'diameter' ">
+            <!-- If HEIGHT and VOLUME are set -->
+            <ng-container *ngIf="firstValue === 'height' && secondValue === 'volume' ||
+                                 firstValue === 'volume' && secondValue === 'height' ">
               <mat-form-field fxFlex class="input-number" appearance="fill">
                   <mat-label>Diameter:</mat-label>
                   <input matInput readonly formControlName="diameter" placeholder="Diameter">
                   <span matSuffix>mm</span>
-                  <mat-hint>Automatic Calculation due to given <strong>height</strong> and <strong>diameter</strong></mat-hint>
+                  <mat-hint>Automatic Calculation due to given <strong>height</strong> and <strong>volume</strong>{{setTankDiameter()}}</mat-hint>
                   <mat-error *ngIf="tankForm.get('diameter')?.hasError('required')">Die Id muss eingegeben werden</mat-error>
               </mat-form-field>
           </ng-container>
@@ -179,6 +199,7 @@
         <p>FirstValue: {{getFirstValue()}}</p>
         <p>SeondValue: {{getSecondValue()}}</p>
         <p>ThirdValue: {{getThirdValue()}}</p>
+        <p>diameterCache: {{getDiameterCache()}}</p>
     </div>
 </div>
 <div class="card">
