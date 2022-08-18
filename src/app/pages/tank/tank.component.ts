@@ -181,16 +181,21 @@ export class TankComponent implements OnInit {
       return obj.bdiameter == diameter;
     });
 
-    if (bottom) {
+    if (!bottom || totvolume === 0|| !totvolume || Math.sign(totvolume) === -1) {
+      // catching syntax or calculation errors
+      console.log("error");
+      return 0;
+    } else {
       // volume of the Tanks Cylinder
       var volumeZyl = totvolume - (2*bottom.bvolume);
       // height of the Tank Cylinder
       var heightZyl = volumeZyl / (Math.pow(diameter/2, 2) * this.pi)
       // convert to mm and round plus adding the two bottoms and 100 for total height
       var ret = Math.round(heightZyl*1e6) + (2 * bottom.bheight) + 100;
+      console.log("done");
       return ret;
     }
-    return 0;
+
   }
 
   /**
@@ -204,6 +209,8 @@ export class TankComponent implements OnInit {
     var ret = this.getTankVolume(diameter, totheight);
     // write volume value to TankForm
     this.tankForm.get('volume')?.setValue(ret);
+    console.log("set Volume");
+
   }
 
   setTankDiameter(): void {

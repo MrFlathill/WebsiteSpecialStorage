@@ -1,27 +1,27 @@
-<table >
-  <tr>
-    <th *ngFor="let str of displayedColumns">{{str}}</th>
-  </tr>
-  <tr *ngFor="let bottom of bottoms">
-    <td class="alignMiddle">{{bottom.bname}}</td>
-    <td class="alignMiddle">{{bottom.bdiameter}}mm</td>
-    <td class="alignMiddle">{{bottom.bheight}}mm</td>
-    <td class="alignMiddle">{{bottom.bvolume}}L</td>
-    <td class="alignMiddle">{{bottom.bminheight}}mm</td>
-    <td class="alignMiddle">{{bottom.bmaxheight}}mm</td>
-    <td class="alignMiddle">{{bottom.bdescription}}</td>
-    <td class="alignMiddle">{{bottom.bprice}}€</td>
-    <td>
-      <button class="maraniGreenButton leftButton" mat-raised-button  >
-          <mat-icon class="mat-18">delete_outline</mat-icon>
-      </button>
-      <button class="maraniGreenButton leftButton" mat-raised-button  >
-        <mat-icon class="mat-18">mode_edit</mat-icon>
-    </button>
-    </td>
-  </tr>
-</table>
-
-<button class="maraniGreenButton addButton" mat-raised-button (click)="addBottom()">
-    <mat-icon class="add-icon">add</mat-icon>
-</button>
+<!-- <h1 class="maraniGrayCol title">Config Page</h1>
+<section id="team" class="team-section">
+  <div class="team-content" fxLayout.gt-sm="row">
+      <div fxFlex class="team-card">
+          <img class="profile_img" src="assets/profile_photo_max1.jpg" alt="Maximilian Ebenkofler">
+          <div class="team-container">
+              <h2>Maximilian Ebenkofler</h2>
+              <p class="title_team">CEO of Flathill GmbH</p>
+              <p>I'm a computer specialist from Südtirol.<br>My Job is making your Website.</p>
+              <p></p>
+              <p>maximilian@ebenkofler.com</p>
+              <button mat-raised-button class="button" onclick="document.location =  'mailto:maximilian@ebenkofler.com'">Contact </button>
+          </div>
+      </div>
+      <div fxFlex class="team-card">
+          <img class="profile_img" src="assets/IMG_20220706_155426.jpg" alt="Maximilian Ebenkofler">
+          <div class="team-container">
+              <h2>Samuel Pircher</h2>
+              <p class="title_team">schlechter Mitarbeiter</p>
+              <p>Isch an extremer pfuscher,<br>(er tuat nichts onders als pfuschen)</p>
+              <p>samuelpircher@gmail.com</p>
+              <button mat-raised-button class="button" onclick="document.location =  'mailto:maximilianebenkofler@gmail.com'">Contact </button>
+          </div>
+      </div>
+  </div>
+</section> -->
+<app-list-bottoms></app-list-bottoms>

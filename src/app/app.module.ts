@@ -32,7 +32,7 @@ import { TankLogicComponent } from './service/tank-logic/tank-logic.component';
     TankComponent,
     ConnectorsComponent,
     UserComponent,
-    TankLogicComponent
+    TankLogicComponent,
   ],
   imports: [
     // Root Module and Feature Module have to be import prior to Router Modules.

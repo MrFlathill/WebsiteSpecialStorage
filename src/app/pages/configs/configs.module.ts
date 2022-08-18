@@ -7,11 +7,15 @@ import { ConfigsRoutingModule } from './configs-routing.module'
 
 // Components
 import { ConfigsComponent } from './configs.component';
+import { ListBottomsComponent } from './configPages/list-bottoms/list-bottoms.component';
+import { EditBottomsComponent } from './configPages/edit-bottoms/edit-bottoms.component';
 
 
 @NgModule({
   declarations: [
     ConfigsComponent,
+    ListBottomsComponent,
+    EditBottomsComponent,
   ],
   imports: [
     SharedModule,
